@@ -27,13 +27,19 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.services.LanguageServer;
+import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipse.lsp4j.services.WorkspaceService;
 
 /**
  * Skylark is a standalone skylark intepreter. The environment doesn't
  * contain Bazel-specific functions and variables. Load statements are
  * forbidden for the moment.
  */
-class Skylark {
+class Skylark implements LanguageServer {
   private static final String START_PROMPT = ">> ";
   private static final String CONTINUATION_PROMPT = ".. ";
 
@@ -121,5 +127,30 @@ class Skylark {
       ret = 1;
     }
     System.exit(ret);
+  }
+
+  @Override
+  public CompletableFuture<InitializeResult> initialize(InitializeParams initializeParams) {
+    return null;
+  }
+
+  @Override
+  public CompletableFuture<Object> shutdown() {
+    return null;
+  }
+
+  @Override
+  public void exit() {
+
+  }
+
+  @Override
+  public TextDocumentService getTextDocumentService() {
+    return null;
+  }
+
+  @Override
+  public WorkspaceService getWorkspaceService() {
+    return null;
   }
 }
