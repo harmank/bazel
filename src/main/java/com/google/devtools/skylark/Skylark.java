@@ -22,17 +22,24 @@ import com.google.devtools.build.lib.syntax.EvalException;
 import com.google.devtools.build.lib.syntax.Mutability;
 import com.google.devtools.build.lib.syntax.Printer;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.launch.LSPLauncher;
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+
 
 /**
  * Skylark is a standalone skylark intepreter. The environment doesn't
@@ -153,4 +160,12 @@ class Skylark implements LanguageServer {
   public WorkspaceService getWorkspaceService() {
     return null;
   }
+
+  private LanguageServer languageserver;
+  LanguageServer server = languageserver;
+
+  Launcher<LanguageClient> launcher =
+      LSPLauncher.createServerLauncher(server, new ByteArrayInputStream("".getBytes()), new ByteArrayOutputStream());
+    Future<?> startListening = launcher.startListening();
+
 }
